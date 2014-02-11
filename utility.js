@@ -27,3 +27,7 @@ function filter(items, f) {
 	}
 	return output;
 }
+
+function pluck(arr, key){
+	return map(arr, function(e){ return e[key]});
+}
