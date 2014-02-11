@@ -1,6 +1,6 @@
 $(function(){
 
-var catalogue = [
+var library = [
 	{	
 	imagePath: 'images/001.jpg',
 	title: 'Opening Ceremony Fireworks',
@@ -106,17 +106,19 @@ var catalogue = [
 	}
 
 ];
+
+var collageItem= filter(library, function(){
+	for (var i=0; i<library.length; i++){
+		return 
+	}
+
+});
 $(document).on('click', '#photo-search-submit', function(e){
 	e.preventDefault();
 	var searchTerm = $('#photo-search').val();
-	
-	if(searchTerm===catalogue[12].tags[7]){
-		console.log("we have a picture");
-	}
-
-
-	// console.log(searchTerm);
 });
+
+
 });
 
 
