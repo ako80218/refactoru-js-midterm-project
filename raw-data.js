@@ -6,10 +6,7 @@ var library = [
 	photographer: 'Jarrett Frazier',
 	tags: ['Olympics', 'Sochi', 'Sochi 2014', 'Adler', 'Olympic Park', 'Russia', 'Fireworks', 'Opening Ceremony', 
 	'Fisht Stadium', 'Fisht', 'Opening Ceremony']
-
-
 	},
-
 	{
 	imagePath: 'images/002.jpg',
 	title: 'Opening Ceremony Fireworks',
@@ -18,7 +15,6 @@ var library = [
 	tags: ['Olympics', 'Sochi','Winter Olympics', 'Adler', 'Olympic Park', 'Russia', 
 	'Fireworks', 'Opening Ceremony', 'Fisht Stadium', 'Fisht', 'Opening Ceremony']
 	},
-
 	{
 	imagePath: 'images/003.jpg',
 	title: 'Sochi 2014 Olympic Coins',
@@ -48,7 +44,6 @@ var library = [
 	photographer: 'Sochi 2014 Winter Games',
 	tags: ['Olympics', 'Sochi Olympics', 'Sochi 2014', 'Winter Olympics', 'Russia', 'Iceberg Skating Palace', 'skaters']
 	},
-
 	{
 	imagePath: 'images/007.jpg',
 	title: 'Sochi Opening Ceremony Skaters',
@@ -56,7 +51,6 @@ var library = [
 	photographer: 'Tim Hipps',
 	tags: ['Olympics', 'Sochi', 'Sochi Olympics', 'Sochi 2014', 'Winter Olympics', 'Russia', 'skaters', 'Opening Ceremony', 'Fisht Stadium', 'Fisht']	
 	},
-
 	{
 	imagePath: 'images/008.jpg',
 	title: 'Doves of Peace upon "Swan Lake."',
@@ -64,15 +58,6 @@ var library = [
 	photographer: 'Tim Hipps',
 	tags: ['Olympics',  'Sochi Olympics', 'Sochi 2014', 'Winter Olympics', 'Russia', 'skaters', 'Opening Ceremony', 'Fisht Stadium', 'Fisht',
 		'Swan Lake', 'Peter Illyich Tchaikovsky']
-	},
-
-	{
-	imagePath: 'images/008.jpg',
-	title: 'Doves of Peace upon "Swan Lake."',
-	description: 'Dancers perform to Peter Illyich Tchaikovsky\'s "Swan Lake," during the Opening Ceremony at Fisht Olympic Stadium',
-	photographer: 'Tim Hipps',
-	tags: ['Olympics', 'Sochi', 'Sochi Olympics', 'Sochi 2014', 'Winter Olympics', 'Russia', 'skaters', 'Opening Ceremony', 'Fisht Stadium', 'Fisht',
-		'Swan Lake', 'Peter Illyich Tchaikovsky', 'Dove of Peace']	
 	},
 	{
 	imagePath: 'images/009.jpg',

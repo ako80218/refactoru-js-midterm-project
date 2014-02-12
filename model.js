@@ -38,45 +38,63 @@ TagCloud.prototype.setTagWeights = function(){
     	for(var key in this.tagCounts){
   		tagWeights[key] = key;
     		tagWeights[key]=this.tagCounts[key]/maxValue;
-    		tagWeights[key] = tagWeights[key] > .3 ? (((tagWeights[key])*3).toFixed(1)).toString() + 'em' : '1em';
+    		tagWeights[key] = tagWeights[key] > .3 ? (((tagWeights[key])*2.7).toFixed(1)).toString() + 'em' : '1em';
     	}
-    	// console.log("tagWeights: ", tagWeights);
         	return tagWeights;
 }
-//This fucntion creates the dom elements neceray to hold the tag cloud.
+//this function builds a catalogue of all available image objects stored in raw-data.js
+var createCatalogue = function(){
+	var image = [];
+	for (i=0; i<library.length; i++){
+		var imageObject= new Image(library[i]);
+		image.push(imageObject);
+	}
+	return image;
+};
+//This function builds a selectedPhotos array of image objects with tags values that 
+///are exactly equal to the search term of all available image objects stored in raw-data.js
+///Function takes an array of photo objects as its first argument.
+var createPastiche = function(lib, term){
+	var selectedPhotos = [];
+	selectedPhotos= filter(lib, function(item){
+			return item.tags.indexOf(term) !== -1;
+		});
+	return selectedPhotos;
+};
+//This function creates and inserts the dom elements necesary to hold the tag cloud.
+//The function's first argument is an object 
+var tagsDomInsert = function(obj){
+	$('#cloud-container').empty();
+	var tagCloud = $('#tag-cloud').html();
+ 	var template = Handlebars.compile(tagCloud);
+ 	$('#cloud-container').append(template(obj));
+};
+//This function creates and inserts the dom elements necesary to hold the images in the pastiche.
+//The function's first argument is an object 
+var imagesDomInsert = function(arr){
+	$('#image-container').empty();
+	var imageTemplate = $('#image-template').html();
+ 	var template = Handlebars.compile(imageTemplate);
+	
+ 	$('#image-container').append(template(arr));
+ 	
+};
 
 
-//empty image catalogue
-var image = [];
-for (i=0; i<library.length; i++){
-	//create a catalogue of all the image objects
-	var imageObject= new Image(library[i]);
-	image.push(imageObject);
-}
+
 $(document).on('click', '#photo-search-submit', function(e){
 	e.preventDefault();
+	var catalogue = createCatalogue();
 	var searchTerm = $('#photo-search').val();
-	console.log('searchTerm.length: ', searchTerm.length);
-	var pastiche = [];
-	//the pastiche is an array of image objects with tags values that 
-	//are exactly equal to the search term
-	pastiche= filter(image, function(item){
-			return item.tags.indexOf(searchTerm) !== -1;
-		});
-	// console.log(pastiche);
+	var pastiche = createPastiche(catalogue, searchTerm);
 	var pasticheTagCloud = new TagCloud(pastiche);
-	console.log("pasticheTagCloud: ", pasticheTagCloud);
-	$('<ul id="tag-list" >').appendTo("#tagCloud");
-	//create item
-	var li = $("<li>");
-	//add to list
-	li.appendTo("#tag-list");
-	var newTags = pasticheTagCloud.setTagWeights();
-	console.log("newTags: ", newTags);
-	for (var key in newTags){
-		$('#tag-list').children('li').text('key').css('font-size', newTags[key]);
-		
-	}
+	// console.log("pasticheTagCloud.setTagWeights: ", pasticheTagCloud.setTagWeights());
+	tagsDomInsert(pasticheTagCloud.setTagWeights());
+	imagesDomInsert(pastiche);
+	// console.log("pastiche[0].imagePath", pastiche[0].imagePath);
+	// console.log("pastiche[1].imagePath", pastiche[1].imagePath);
+	// console.log("pastiche[2].imagePath", pastiche[2].imagePath);
+	
 });
 
 
