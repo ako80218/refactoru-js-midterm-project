@@ -34,20 +34,18 @@ TagCloud.prototype.setTagWeights = function(){
     		}
     	}
     	var tagWeights ={};
+
     	for(var key in this.tagCounts){
-    		tagWeights.key =key;
+  		tagWeights[key] = key;
     		tagWeights[key]=this.tagCounts[key]/maxValue;
+    		tagWeights[key] = tagWeights[key] > .3 ? (((tagWeights[key])*3).toFixed(1)).toString() + 'em' : '1em';
     	}
-    	console.log("tagWeights: ", tagWeights);
-    	return tagWeights;
+    	// console.log("tagWeights: ", tagWeights);
+        	return tagWeights;
 }
-//This function assigns font sizes based on weights assigned to 
-//tags in the setTagWeights method. This function takes as its argument, the 
-//object that setTagWeights returns. The setFontSizes method returns an  
-TagCloud.prototype.setFontSizes = function(obj){
-	for(var key in obj){
-		if(obj[key] ===1){}	
-}
+//This fucntion creates the dom elements neceray to hold the tag cloud.
+
+
 //empty image catalogue
 var image = [];
 for (i=0; i<library.length; i++){
@@ -58,6 +56,7 @@ for (i=0; i<library.length; i++){
 $(document).on('click', '#photo-search-submit', function(e){
 	e.preventDefault();
 	var searchTerm = $('#photo-search').val();
+	console.log('searchTerm.length: ', searchTerm.length);
 	var pastiche = [];
 	//the pastiche is an array of image objects with tags values that 
 	//are exactly equal to the search term
@@ -72,7 +71,12 @@ $(document).on('click', '#photo-search-submit', function(e){
 	var li = $("<li>");
 	//add to list
 	li.appendTo("#tag-list");
-	pasticheTagCloud.setTagWeights();
+	var newTags = pasticheTagCloud.setTagWeights();
+	console.log("newTags: ", newTags);
+	for (var key in newTags){
+		$('#tag-list').children('li').text('key').css('font-size', newTags[key]);
+		
+	}
 });
 
 
