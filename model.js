@@ -42,18 +42,18 @@ TagCloud.prototype.setTagWeights = function(){
     	}
         	return tagWeights;
 }
-//this function builds a catalogue of all available image objects stored in raw-data.js
+//This function builds a catalogue of all available image objects stored in raw-data.js
 var createCatalogue = function(){
-	var image = [];
+	var images = [];
 	for (i=0; i<library.length; i++){
 		var imageObject= new Image(library[i]);
-		image.push(imageObject);
+		images.push(imageObject);
 	}
-	return image;
+	return images;
 };
-//This function builds a selectedPhotos array of image objects with tags values that 
-///are exactly equal to the search term of all available image objects stored in raw-data.js
-///Function takes an array of photo objects as its first argument.
+//This function builds a selectedPhotos array of image objects with a tag value that 
+///is exactly equal to the search term of all available image objects stored in raw-data.js
+///Function takes an array of photo objects as its first argument and a string as it's second argument.
 var createPastiche = function(lib, term){
 	var selectedPhotos = [];
 	selectedPhotos= filter(lib, function(item){
@@ -79,7 +79,15 @@ var imagesDomInsert = function(arr){
  	$('#image-container').append(template(arr));
  	
 };
+//This function randomly selects one of the photo objects in the pastiche array
+//and uses its imagePath property to insert an image in the background
+var  randomSelectBackground = function(){
 
+};
+
+//
+$('#background').hide();
+$('#background').fadeIn(3000);
 
 
 $(document).on('click', '#photo-search-submit', function(e){
@@ -94,6 +102,9 @@ $(document).on('click', '#photo-search-submit', function(e){
 	// console.log("pastiche[0].imagePath", pastiche[0].imagePath);
 	// console.log("pastiche[1].imagePath", pastiche[1].imagePath);
 	// console.log("pastiche[2].imagePath", pastiche[2].imagePath);
+	
+
+	
 	
 });
 
