@@ -18,7 +18,7 @@ var TagCloud = function(arr){
 			}
 		}
 	}
-	
+
 };
 //This function calculates the most frequent tag in the TagCloud object
 //then it calculates the relative weight of all other tags in the cloud and 
@@ -42,11 +42,11 @@ TagCloud.prototype.setTagWeights = function(){
     	}
         	return tagWeights;
 }
-//This function builds a catalogue of all available image objects stored in raw-data.js
-var createCatalogue = function(){
+//This function builds a array of all available image objects. It takes an array as its argument.
+var Catalogue = function(arr){
 	var images = [];
-	for (i=0; i<library.length; i++){
-		var imageObject= new Image(library[i]);
+	for (i=0; i<arr.length; i++){
+		var imageObject = new Image(arr[i]);
 		images.push(imageObject);
 	}
 	return images;
@@ -84,7 +84,10 @@ var imagesDomInsert = function(arr){
 var  randomSelectBackground = function(){
 
 };
+// This function rotates three images through
+var  loopingBackground = function(){
 
+};
 //
 $('#background').hide();
 $('#background').fadeIn(3000);
@@ -92,7 +95,7 @@ $('#background').fadeIn(3000);
 
 $(document).on('click', '#photo-search-submit', function(e){
 	e.preventDefault();
-	var catalogue = createCatalogue();
+	var catalogue = new Catalogue(library);
 	var searchTerm = $('#photo-search').val();
 	var pastiche = createPastiche(catalogue, searchTerm);
 	var pasticheTagCloud = new TagCloud(pastiche);
