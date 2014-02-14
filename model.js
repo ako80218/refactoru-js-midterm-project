@@ -82,7 +82,9 @@ var randomDisplay = function(arr){
 	console.log("arr: ", arr);
 	for(var i=0; i<arr.length; i++){
 	var imgSelector = ('img[data-id='+((arr[i].id).toString())+']');
-	$(imgSelector).css('width', '300px');
+	$(imgSelector).css({'width': '300px',
+			       'transform':'rotate(20deg)',
+			   }	);
 	}
 }
 
