@@ -82,12 +82,13 @@ var randomDisplay = function(arr){
 	console.log("arr: ", arr);
 	for(var i=0; i<arr.length; i++){
 	var imgSelector = ('img[data-id='+((arr[i].id).toString())+']');
-	$(imgSelector).css({'width': '300px',
-			       'transform':'rotate(20deg)',
-			   }	);
+	$(imgSelector).addClass('random');
 	}
 }
 
+// css({'width': '300px',
+// 			       'transform':'rotate(20deg)',
+// 			   }	);
 
 //This function creates and inserts the dom elements necesary to hold the tag cloud.
 //The function's first argument is an object 
@@ -144,7 +145,7 @@ $('#photo-search-submit').on('click', function(e){
 	var backgroundImage = pastiche.randomSelectOne();
 	// console.log("backgroundImage.imagePath: ", backgroundImage.imagePath);
 	randomBackground(backgroundImage.imagePath);
-	randomDisplay(pastiche.randomSelectMany(2));
+	randomDisplay(pastiche.randomSelectMany(4));
 
 	
 
