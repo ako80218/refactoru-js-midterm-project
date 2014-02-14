@@ -78,7 +78,13 @@ var randomBackground = function(path){
 	$("#background").fadeIn(1000);
 }
 
-
+var randomDisplay = function(arr){
+	console.log("arr: ", arr);
+	for(var i=0; i<arr.length; i++){
+	var imgSelector = ('img[data-id='+((arr[i].id).toString())+']');
+	$(imgSelector).css('width', '300px');
+	}
+}
 
 
 //This function creates and inserts the dom elements necesary to hold the tag cloud.
@@ -129,7 +135,6 @@ $('#photo-search-submit').on('click', function(e){
 	var searchTerm = $('#photo-search').val();
 	var pastiche = new Pastiche(catalogue, searchTerm);
 	pastiche.randomSelectOne();
-	pastiche.randomSelectMany(2);
 	
 	var pasticheTagCloud = new TagCloud(pastiche.selectedPhotos);
 	tagsDomInsert(pasticheTagCloud.setTagWeights());
@@ -137,6 +142,7 @@ $('#photo-search-submit').on('click', function(e){
 	var backgroundImage = pastiche.randomSelectOne();
 	// console.log("backgroundImage.imagePath: ", backgroundImage.imagePath);
 	randomBackground(backgroundImage.imagePath);
+	randomDisplay(pastiche.randomSelectMany(2));
 
 	
 
