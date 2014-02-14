@@ -10,7 +10,21 @@
 	<body>
 	<div class="all-content container">
 		<div class="row">
-			<div class ="background" id="background"><img class="background-image" src="images/originals/015.jpg"></div>
+			<div class ="background" id="background">
+
+			<img id="pastiche-background" class="background-image" src=""> 
+			<div>
+				<img class="background-image" src="images/home-gallery/001.jpg">
+			</div>
+			
+			<div>
+				<img class="background-image" src="images/home-gallery/003.jpg">
+			</div>
+			<div>
+				<img class="background-image" src="images/home-gallery/002.jpg">
+			</div>
+
+			</div>
 			<div class="col-md-12 content" id="content">
 				<div class="row">
 					<div class="sidebar col-md-3">
@@ -53,7 +67,7 @@
 		<ul class="list-inline">
 			{{#each this}}
 				<li class="list-item">
-					<img class="image" src={{imagePath}}>
+					<img class="image" src={{imagePath}} data-id={{id}}>
 				</li>
 			{{/each}}
 		</ul>

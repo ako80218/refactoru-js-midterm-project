@@ -18,7 +18,7 @@ var TagCloud = function(arr){
 			}
 		}
 	}
-
+	console.log("this.tagCounts: ", this.tagCounts);
 };
 //This function calculates the most frequent tag in the TagCloud object
 //then it calculates the relative weight of all other tags in the cloud and 
@@ -44,26 +44,47 @@ TagCloud.prototype.setTagWeights = function(){
 }
 //This function builds a array of all available image objects. It takes an array as its argument.
 var Catalogue = function(arr){
-	var images = [];
-	for (i=0; i<arr.length; i++){
-		var imageObject = new Image(arr[i]);
-		images.push(imageObject);
-	}
-	return images;
+	this.images= map(arr, function(x){
+		return x;
+	});
 };
 //This function builds a selectedPhotos array of image objects with a tag value that 
 ///is exactly equal to the search term of all available image objects stored in raw-data.js
 ///Function takes an array of photo objects as its first argument and a string as it's second argument.
-var createPastiche = function(lib, term){
-	var selectedPhotos = [];
-	selectedPhotos= filter(lib, function(item){
-			return item.tags.indexOf(term) !== -1;
-		});
-	return selectedPhotos;
+var Pastiche = function(lib, term){
+	this.selectedPhotos= filter(lib.images, function(item){
+		return item.tags.indexOf(term) !== -1;
+	});
 };
+//This function randomly selects a photo object in the pastiche array
+Pastiche.prototype.randomSelectOne = function(){
+	// console.log(this);
+ 	var selectedIndex = Math.floor(Math.random() * (this.selectedPhotos.length));
+ 	return this.selectedPhotos[selectedIndex];
+};
+/////
+Pastiche.prototype.randomSelectMany = function(num){
+	var generatedRange = range(0, num-1);
+	var randomImages = map(generatedRange, this.randomSelectOne.bind(this));
+	console.log("randomImages:", randomImages);
+	return randomImages;
+};
+
+//This function takes the imagePath of the randomly selected photo object from the pastiche 
+//and assigns it to the background of the #background div element
+var randomBackground = function(path){
+	$("#background").hide();
+	$("#pastiche-background").attr('src', path);
+	$("#background").fadeIn(1000);
+}
+
+
+
+
 //This function creates and inserts the dom elements necesary to hold the tag cloud.
 //The function's first argument is an object 
 var tagsDomInsert = function(obj){
+	console.log("obj ", obj);
 	$('#cloud-container').empty();
 	var tagCloud = $('#tag-cloud').html();
  	var template = Handlebars.compile(tagCloud);
@@ -71,40 +92,52 @@ var tagsDomInsert = function(obj){
 };
 //This function creates and inserts the dom elements necesary to hold the images in the pastiche.
 //The function's first argument is an object 
-var imagesDomInsert = function(arr){
+var imagesDomInsert = function(obj){
 	$('#image-container').empty();
 	var imageTemplate = $('#image-template').html();
+	// console.log("obj ", obj.selectedPhotos);
  	var template = Handlebars.compile(imageTemplate);
-	
- 	$('#image-container').append(template(arr));
- 	
-};
-//This function randomly selects one of the photo objects in the pastiche array
-//and uses its imagePath property to insert an image in the background
-var  randomSelectBackground = function(){
-
-};
-// This function rotates three images through
-var  loopingBackground = function(){
-
-};
-//
-$('#background').hide();
-$('#background').fadeIn(3000);
+ 	$('#image-container').append(template(obj.selectedPhotos));
+ };
 
 
-$(document).on('click', '#photo-search-submit', function(e){
+// This function rotates three images through home background
+// var  loopingBackground = function(){	
+// 	$('#pastiche-background').hide();
+// 	$("#background > div:gt(0)").hide();
+// 	setInterval(function() { 
+// 	  $('#background > div:first')
+// 	    .fadeOut(2000)
+// 	    .next()
+// 	    .fadeIn(2000)
+// 	    .end()
+// 	    .appendTo('#background');
+// 	},  4000);
+		
+
+// };
+
+// loopingBackground();
+
+
+
+
+
+$('#photo-search-submit').on('click', function(e){
 	e.preventDefault();
 	var catalogue = new Catalogue(library);
 	var searchTerm = $('#photo-search').val();
-	var pastiche = createPastiche(catalogue, searchTerm);
-	var pasticheTagCloud = new TagCloud(pastiche);
-	// console.log("pasticheTagCloud.setTagWeights: ", pasticheTagCloud.setTagWeights());
+	var pastiche = new Pastiche(catalogue, searchTerm);
+	pastiche.randomSelectOne();
+	pastiche.randomSelectMany(2);
+	
+	var pasticheTagCloud = new TagCloud(pastiche.selectedPhotos);
 	tagsDomInsert(pasticheTagCloud.setTagWeights());
 	imagesDomInsert(pastiche);
-	// console.log("pastiche[0].imagePath", pastiche[0].imagePath);
-	// console.log("pastiche[1].imagePath", pastiche[1].imagePath);
-	// console.log("pastiche[2].imagePath", pastiche[2].imagePath);
+	var backgroundImage = pastiche.randomSelectOne();
+	// console.log("backgroundImage.imagePath: ", backgroundImage.imagePath);
+	randomBackground(backgroundImage.imagePath);
+
 	
 
 	

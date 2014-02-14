@@ -27,7 +27,19 @@ function filter(items, f) {
 	}
 	return output;
 }
+function pluck(arr, key){
+	var mapped = map(arr, function(x){
+		return x[key];
+	});
+	return mapped;
+}
 
-function pluck(obj, key){
-	return map(arr, function(e){ return e[key]});
+
+
+function range(start, end) {
+    var rangeArray = [];
+    for (var i = start; i <= end; i++) {
+        rangeArray.push(i);
+    }
+    return rangeArray;
 }
