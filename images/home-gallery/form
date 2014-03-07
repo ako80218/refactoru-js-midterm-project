@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Express Form</title>
+</head>
+<body>
+	<form action="/formsubmit" method="post">
+		<input type="text" placeholder="value">
+		<button type="submit">Submit</button>
+	</form>
+</body>
+</html>

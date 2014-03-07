@@ -1,12 +1,12 @@
 $(function(){
-//creates an image object for each instance of a picture
+//Creates an image object for each instance of a picture
 var Image = function(obj){
 	for (var key in obj){
 		this[key] = obj[key];
 	}
 }
-//This function loops through an array of image objects and assmbles a tagCounts object.
-//This function returns the tagCounts object.
+
+//Loops through an array of image objects and assmbles a TagCloud object.
 var TagCloud = function(arr){
 	this.tagCounts = {};
 	for (var i=0; i<arr.length; i++){
@@ -18,7 +18,7 @@ var TagCloud = function(arr){
 			}
 		}
 	}
-	console.log("this.tagCounts: ", this.tagCounts);
+	// console.log("this.tagCounts: ", this.tagCounts);
 };
 //This function calculates the most frequent tag in the TagCloud object
 //then it calculates the relative weight of all other tags in the cloud and 
@@ -99,6 +99,10 @@ var tagsDomInsert = function(obj){
  	var template = Handlebars.compile(tagCloud);
  	$('#cloud-container').append(template(obj));
 };
+//This function takes a string as its first arguement to find images tagged with that string.
+var imageFind = function(term){
+
+}
 //This function creates and inserts the dom elements necesary to hold the images in the pastiche.
 //The function's first argument is an object 
 var imagesDomInsert = function(obj){
@@ -108,6 +112,65 @@ var imagesDomInsert = function(obj){
  	var template = Handlebars.compile(imageTemplate);
  	$('#image-container').append(template(obj.selectedPhotos));
  };
+ //Positions the lightbox within the #overlay div, Used as a callback on a load event handler
+ var positionLightbox= function(){
+ 	// var longestDimension;
+ 	var imageWidth= $('#lightbox-image').width();
+ 	var imageHeight = $('#lightbox-image').height();
+ 	console.log('imageWidth Before: ', imageWidth);
+ 	console.log('imageHeight Before: ', imageHeight);
+ 	if(imageHeight>=($(window).height())*0.8){
+ 		var widthRatio =($(window).height()*0.7)/imageHeight;
+ 		imageWidth*=widthRatio;
+ 		imageHeight=($(window).height()*0.7);
+ 	}
+ 	if(imageWidth>=($(window).width()*0.8)){
+ 		var heightRatio =($(window).width()*0.7)/imageWidth;
+ 		imageHeight*=heightRatio;
+ 		imageWidth=($(window).width()*0.7);
+ 	}
+ 	console.log('imageWidth After: ', imageWidth);
+ 	console.log('imageHeight After: ', imageHeight);
+ 	$('#lightbox-image').height(imageHeight);
+ 	$('#lightbox-image').width(imageWidth);
+ 	
+ 	var scrolling = $(document).scrollTop();
+	var top = ($(window).height() - $('#lightbox').height())/2;
+	var left = ($(window).width() - $('#lightbox').width())/2;
+	$('#lightbox')
+	.css({
+		top: top + scrolling,
+		left : left
+	})
+	.fadeIn();
+};
+//closes the #lightbox and #overlay divs when used as a callback on a click handler 
+var removeLightbox = function(){
+
+	$('#overlay, #lightbox')
+	.fadeOut('slow', function(){
+		$(this).hide();
+		$('body').css('overflow-y', 'auto');//show scrollbars again
+	});
+};
+//Creates and inserst dom elements necesary to hold a single image in the lightbox view 
+var imageLightbox = function(obj){
+	$('#overlay').empty();
+ 	//prevent scrollbars
+	$('body').css('overflow-y', 'hidden');
+	$('#overlay').fadeIn(600);
+ 	var lightboxTemplate = $('#ligthbox-template').html();
+ 	var template = Handlebars.compile(lightboxTemplate);
+ 	$('#overlay').append(template(obj));
+ 	$('#lightbox-image').on('load', function(){
+	positionLightbox();
+	
+ 	});
+ 	
+};
+
+
+ 
 
 
 // This function rotates three images through home background
@@ -146,6 +209,28 @@ $('#photo-search-submit').on('click', function(e){
 	// console.log("backgroundImage.imagePath: ", backgroundImage.imagePath);
 	randomBackground(backgroundImage.imagePath);
 	randomDisplay(pastiche.randomSelectMany(4));
+	$(document).on('click', '.image', function(){
+		var photoId = $(this).data('id');
+		console.log("photoID: ", photoId);
+		console.log("pastiche: ", pastiche);
+		var selectedImage = filter(pastiche.selectedPhotos, function(item){
+			return item.id.indexOf(photoId) !== -1;
+		});
+		
+ 	imageLightbox(selectedImage[0]);
+ 	
+	 	$(document).on('click', '#close', function(e){
+			e.preventDefault();
+			removeLightbox();
+		});
+ 	});
+ 	$(document).on('mouseenter', '.tag', function(){
+ 		var tag = $(this).text();
+ 		console.log("tag: ", tag);
+ 	});
+ 	$(document).on('mouseleave', '.tag', function(){
+ 		tag ='';
+ 	});
 
 	
 
