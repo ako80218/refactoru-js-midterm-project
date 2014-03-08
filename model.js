@@ -18,7 +18,6 @@ var TagCloud = function(arr){
 			}
 		}
 	}
-	// console.log("this.tagCounts: ", this.tagCounts);
 };
 //This function calculates the most frequent tag in the TagCloud object
 //then it calculates the relative weight of all other tags in the cloud and 
@@ -34,7 +33,6 @@ TagCloud.prototype.setTagWeights = function(){
 			}
 		}
 		var tagWeights ={};
-
 		for(var key in this.tagCounts){
 		tagWeights[key] = key;
 			tagWeights[key]=this.tagCounts[key]/maxValue;
@@ -62,7 +60,6 @@ Pastiche.prototype.randomSelectOne = function(){
 	var selectedIndex = Math.floor(Math.random() * (this.selectedPhotos.length));
 	return this.selectedPhotos[selectedIndex];
 };
-
 Pastiche.prototype.randomSelectMany = function(num){
 	var generatedRange = range(0, num-1);
 	var randomImages = map(generatedRange, this.randomSelectOne.bind(this));
@@ -75,13 +72,15 @@ Pastiche.prototype.imageFind = function(term){
         return item.tags.indexOf(term)!==-1;
       });
 	return foundImages;
-}
+};
 //This function takes the imagePath of the randomly selected photo object from the pastiche 
 //and assigns it to the background of the #background div element
 var randomBackground = function(path){
-	$("#background").hide();
+	$("#background").empty().hide();
+	$("#background").append('<img id="pastiche-background" class="background-image" src="">');
 	$("#pastiche-background").attr('src', path);
 	$("#background").fadeIn(1000);
+	$('#pastiche-background').fadeIn();
 };
 var randomDisplay = function(arr){
 	console.log("arr: ", arr);
@@ -107,30 +106,28 @@ var imagesDomInsert = function(obj){
 	// console.log("obj ", obj.selectedPhotos);
 	var template = Handlebars.compile(imageTemplate);
 	$('#image-container').append(template(obj.selectedPhotos));
- };
+};
  //This function places borders on images selected through their data attribute.
- var imageMakeBorders = function(arr){
-  for(var i =0; i<arr.length; i++){
-    $('img[data-id=\''+arr[i].id+'\']').css('border','red solid 1px');
-  }
- };
+var imageMakeBorders = function(arr){
+	for(var i =0; i<arr.length; i++){
+		$('img[data-id=\''+arr[i].id+'\']').css('border','red solid 3px');
+	}
+};
  //This function removes borders on images selected through their data attribute.
- var imageRemoveBorders = function(){
-     $('.image').css('border','none');
- };
-  //This function removes images selected through their data attribute.
- // var imageRemove = function(arr){
- //  for(var i =0; i<arr.length; i++){
- //    $('img[data-id=\''+arr[i].id+'\']').css('border','red solid 1px');
- //  }
- // };
+var imageRemoveBorders = function(){
+	$('.image').css('border','none');
+};
+//This function removes images selected through data-id attributes. 
+//It takes an array as its argument.
+var imageRemove = function(arr){
+	for(var i =0; i<arr.length; i++){
+    	$('img[data-id=\''+arr[i].id+'\']').remove();
+  	}
+};
  //Positions the lightbox within the #overlay div, Used as a callback on a load event handler
- var positionLightbox= function(){
-	// var longestDimension;
+var positionLightbox= function(){
 	var imageWidth= $('#lightbox-image').width();
 	var imageHeight = $('#lightbox-image').height();
-	console.log('imageWidth Before: ', imageWidth);
-	console.log('imageHeight Before: ', imageHeight);
 	if(imageHeight>=($(window).height())*0.8){
 		var widthRatio =($(window).height()*0.7)/imageHeight;
 		imageWidth*=widthRatio;
@@ -141,16 +138,12 @@ var imagesDomInsert = function(obj){
 		imageHeight*=heightRatio;
 		imageWidth=($(window).width()*0.7);
 	}
-	console.log('imageWidth After: ', imageWidth);
-	console.log('imageHeight After: ', imageHeight);
 	$('#lightbox-image').height(imageHeight);
 	$('#lightbox-image').width(imageWidth);
-	
 	var scrolling = $(document).scrollTop();
 	var top = ($(window).height() - $('#lightbox').height())/2;
 	var left = ($(window).width() - $('#lightbox').width())/2;
-	$('#lightbox')
-	.css({
+	$('#lightbox').css({
 		top: top + scrolling,
 		left : left
 	})
@@ -179,45 +172,33 @@ var imageLightbox = function(obj){
 	});
 	
 };
-
-
- 
-
-
 // This function rotates three images through home background
-// var  loopingBackground = function(){	
-// 	$('#pastiche-background').hide();
-// 	$("#background > div:gt(0)").hide();
-// 	setInterval(function() { 
-// 	  $('#background > div:first')
-// 	    .fadeOut(2000)
-// 	    .next()
-// 	    .fadeIn(2000)
-// 	    .end()
-// 	    .appendTo('#background');
-// 	},  4000);
-		
-
-// };
-
-// loopingBackground();
-
-
-
-
-
+var  loopingBackground = function(){	
+	// $('#pastiche-background').hide();
+	//prevent scrollbars
+	$('body').css('overflow-y', 'hidden');
+	$("#background > div:gt(0)").hide();
+	setInterval(function() { 
+	  $('#background > div:first')
+	    .fadeOut(2000)
+	    .next()
+	    .fadeIn(2000)
+	    .end()
+	    .appendTo('#background');
+	},  4000);
+};
+loopingBackground();
 $('#photo-search-submit').on('click', function(e){
 	e.preventDefault();
+	$('body').css('overflow-y', 'auto');
 	var catalogue = new Catalogue(library);
 	var searchTerm = $('#photo-search').val();
 	var pastiche = new Pastiche(catalogue, searchTerm);
 	pastiche.randomSelectOne();
-	
 	var pasticheTagCloud = new TagCloud(pastiche.selectedPhotos);
 	tagsDomInsert(pasticheTagCloud.setTagWeights());
 	imagesDomInsert(pastiche);
 	var backgroundImage = pastiche.randomSelectOne();
-	// console.log("backgroundImage.imagePath: ", backgroundImage.imagePath);
 	randomBackground(backgroundImage.imagePath);
 	randomDisplay(pastiche.randomSelectMany(4));
 	$(document).on('click', '.image', function(){
@@ -226,38 +207,29 @@ $('#photo-search-submit').on('click', function(e){
 		console.log("pastiche: ", pastiche);
 		var selectedImage = filter(pastiche.selectedPhotos, function(item){
 			return item.id.indexOf(photoId) !== -1;
-		});
-		
+	});
 	imageLightbox(selectedImage[0]);
-	
 		$(document).on('click', '#close', function(e){
-			e.preventDefault();
-			removeLightbox();
+				e.preventDefault();
+				removeLightbox();
 		});
 	});
 	$(document).on('mouseenter', '.tag', function(){
 		var tag = $(this).data('tag');
 		var foundImages = pastiche.imageFind(tag);
-            console.log("foundImages: ", foundImages);
-            imageMakeBorders(foundImages);
-           
-	});
+        imageMakeBorders(foundImages);
+  	});
 	$(document).on('mouseleave', '.tag', function(){
         imageRemoveBorders();
 	});
-      $(document).on('click', '.close', function(){
-        // $(this).parent().remove(); 
+      $(document).on('click', '.close', function(e){
+      	e.preventDefault();
+        $(this).parent().remove(); 
         var tag = $(this).parent().data('tag');
-        console.log("tag: ", tag); 
+        var foundImages = pastiche.imageFind(tag);
+        imageRemove(foundImages);
       });
-
-	
-
-	
-	
 });
-
-
 });
 
 
