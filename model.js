@@ -29,18 +29,18 @@ TagCloud.prototype.setTagWeights = function(){
 	for(var key in this.tagCounts){	
 		var value = this.tagCounts[key];
 		if (value > maxValue) {
-		      maxValue = value;
-		      maxProp = key;
-    		}
-    	}
-    	var tagWeights ={};
+			  maxValue = value;
+			  maxProp = key;
+			}
+		}
+		var tagWeights ={};
 
-    	for(var key in this.tagCounts){
-  		tagWeights[key] = key;
-    		tagWeights[key]=this.tagCounts[key]/maxValue;
-    		tagWeights[key] = tagWeights[key] > .3 ? (((tagWeights[key])*2.7).toFixed(1)).toString() + 'em' : '1em';
-    	}
-        	return tagWeights;
+		for(var key in this.tagCounts){
+		tagWeights[key] = key;
+			tagWeights[key]=this.tagCounts[key]/maxValue;
+			tagWeights[key] = tagWeights[key] > .3 ? (((tagWeights[key])*2.7).toFixed(1)).toString() + 'em' : '1em';
+		}
+			return tagWeights;
 }
 //This function builds a array of all available image objects. It takes an array as its argument.
 var Catalogue = function(arr){
@@ -59,82 +59,94 @@ var Pastiche = function(lib, term){
 //This function randomly selects a photo object in the pastiche array
 Pastiche.prototype.randomSelectOne = function(){
 	// console.log(this);
- 	var selectedIndex = Math.floor(Math.random() * (this.selectedPhotos.length));
- 	return this.selectedPhotos[selectedIndex];
+	var selectedIndex = Math.floor(Math.random() * (this.selectedPhotos.length));
+	return this.selectedPhotos[selectedIndex];
 };
-/////
+
 Pastiche.prototype.randomSelectMany = function(num){
 	var generatedRange = range(0, num-1);
 	var randomImages = map(generatedRange, this.randomSelectOne.bind(this));
 	console.log("randomImages:", randomImages);
 	return randomImages;
 };
-
+//This function takes a string as its first argument to find images tagged with that string.
+Pastiche.prototype.imageFind = function(term){
+	var foundImages= filter(this.selectedPhotos, function(item){
+        return item.tags.indexOf(term)!==-1;
+      });
+	return foundImages;
+}
 //This function takes the imagePath of the randomly selected photo object from the pastiche 
 //and assigns it to the background of the #background div element
 var randomBackground = function(path){
 	$("#background").hide();
 	$("#pastiche-background").attr('src', path);
 	$("#background").fadeIn(1000);
-}
-
+};
 var randomDisplay = function(arr){
 	console.log("arr: ", arr);
 	for(var i=0; i<arr.length; i++){
 	var imgSelector = ('img[data-id='+((arr[i].id).toString())+']');
 	$(imgSelector).addClass('random');
 	}
-}
-
-// css({'width': '300px',
-// 			       'transform':'rotate(20deg)',
-// 			   }	);
-
+};
 //This function creates and inserts the dom elements necesary to hold the tag cloud.
 //The function's first argument is an object 
 var tagsDomInsert = function(obj){
 	console.log("obj ", obj);
 	$('#cloud-container').empty();
 	var tagCloud = $('#tag-cloud').html();
- 	var template = Handlebars.compile(tagCloud);
- 	$('#cloud-container').append(template(obj));
+	var template = Handlebars.compile(tagCloud);
+	$('#cloud-container').append(template(obj));
 };
-//This function takes a string as its first arguement to find images tagged with that string.
-var imageFind = function(term){
-
-}
 //This function creates and inserts the dom elements necesary to hold the images in the pastiche.
 //The function's first argument is an object 
 var imagesDomInsert = function(obj){
 	$('#image-container').empty();
 	var imageTemplate = $('#image-template').html();
 	// console.log("obj ", obj.selectedPhotos);
- 	var template = Handlebars.compile(imageTemplate);
- 	$('#image-container').append(template(obj.selectedPhotos));
+	var template = Handlebars.compile(imageTemplate);
+	$('#image-container').append(template(obj.selectedPhotos));
  };
+ //This function places borders on images selected through their data attribute.
+ var imageMakeBorders = function(arr){
+  for(var i =0; i<arr.length; i++){
+    $('img[data-id=\''+arr[i].id+'\']').css('border','red solid 1px');
+  }
+ };
+ //This function removes borders on images selected through their data attribute.
+ var imageRemoveBorders = function(){
+     $('.image').css('border','none');
+ };
+  //This function removes images selected through their data attribute.
+ // var imageRemove = function(arr){
+ //  for(var i =0; i<arr.length; i++){
+ //    $('img[data-id=\''+arr[i].id+'\']').css('border','red solid 1px');
+ //  }
+ // };
  //Positions the lightbox within the #overlay div, Used as a callback on a load event handler
  var positionLightbox= function(){
- 	// var longestDimension;
- 	var imageWidth= $('#lightbox-image').width();
- 	var imageHeight = $('#lightbox-image').height();
- 	console.log('imageWidth Before: ', imageWidth);
- 	console.log('imageHeight Before: ', imageHeight);
- 	if(imageHeight>=($(window).height())*0.8){
- 		var widthRatio =($(window).height()*0.7)/imageHeight;
- 		imageWidth*=widthRatio;
- 		imageHeight=($(window).height()*0.7);
- 	}
- 	if(imageWidth>=($(window).width()*0.8)){
- 		var heightRatio =($(window).width()*0.7)/imageWidth;
- 		imageHeight*=heightRatio;
- 		imageWidth=($(window).width()*0.7);
- 	}
- 	console.log('imageWidth After: ', imageWidth);
- 	console.log('imageHeight After: ', imageHeight);
- 	$('#lightbox-image').height(imageHeight);
- 	$('#lightbox-image').width(imageWidth);
- 	
- 	var scrolling = $(document).scrollTop();
+	// var longestDimension;
+	var imageWidth= $('#lightbox-image').width();
+	var imageHeight = $('#lightbox-image').height();
+	console.log('imageWidth Before: ', imageWidth);
+	console.log('imageHeight Before: ', imageHeight);
+	if(imageHeight>=($(window).height())*0.8){
+		var widthRatio =($(window).height()*0.7)/imageHeight;
+		imageWidth*=widthRatio;
+		imageHeight=($(window).height()*0.7);
+	}
+	if(imageWidth>=($(window).width()*0.8)){
+		var heightRatio =($(window).width()*0.7)/imageWidth;
+		imageHeight*=heightRatio;
+		imageWidth=($(window).width()*0.7);
+	}
+	console.log('imageWidth After: ', imageWidth);
+	console.log('imageHeight After: ', imageHeight);
+	$('#lightbox-image').height(imageHeight);
+	$('#lightbox-image').width(imageWidth);
+	
+	var scrolling = $(document).scrollTop();
 	var top = ($(window).height() - $('#lightbox').height())/2;
 	var left = ($(window).width() - $('#lightbox').width())/2;
 	$('#lightbox')
@@ -146,7 +158,6 @@ var imagesDomInsert = function(obj){
 };
 //closes the #lightbox and #overlay divs when used as a callback on a click handler 
 var removeLightbox = function(){
-
 	$('#overlay, #lightbox')
 	.fadeOut('slow', function(){
 		$(this).hide();
@@ -156,17 +167,17 @@ var removeLightbox = function(){
 //Creates and inserst dom elements necesary to hold a single image in the lightbox view 
 var imageLightbox = function(obj){
 	$('#overlay').empty();
- 	//prevent scrollbars
+	//prevent scrollbars
 	$('body').css('overflow-y', 'hidden');
 	$('#overlay').fadeIn(600);
- 	var lightboxTemplate = $('#ligthbox-template').html();
- 	var template = Handlebars.compile(lightboxTemplate);
- 	$('#overlay').append(template(obj));
- 	$('#lightbox-image').on('load', function(){
+	var lightboxTemplate = $('#ligthbox-template').html();
+	var template = Handlebars.compile(lightboxTemplate);
+	$('#overlay').append(template(obj));
+	$('#lightbox-image').on('load', function(){
 	positionLightbox();
 	
- 	});
- 	
+	});
+	
 };
 
 
@@ -217,20 +228,28 @@ $('#photo-search-submit').on('click', function(e){
 			return item.id.indexOf(photoId) !== -1;
 		});
 		
- 	imageLightbox(selectedImage[0]);
- 	
-	 	$(document).on('click', '#close', function(e){
+	imageLightbox(selectedImage[0]);
+	
+		$(document).on('click', '#close', function(e){
 			e.preventDefault();
 			removeLightbox();
 		});
- 	});
- 	$(document).on('mouseenter', '.tag', function(){
- 		var tag = $(this).text();
- 		console.log("tag: ", tag);
- 	});
- 	$(document).on('mouseleave', '.tag', function(){
- 		tag ='';
- 	});
+	});
+	$(document).on('mouseenter', '.tag', function(){
+		var tag = $(this).data('tag');
+		var foundImages = pastiche.imageFind(tag);
+            console.log("foundImages: ", foundImages);
+            imageMakeBorders(foundImages);
+           
+	});
+	$(document).on('mouseleave', '.tag', function(){
+        imageRemoveBorders();
+	});
+      $(document).on('click', '.close', function(){
+        // $(this).parent().remove(); 
+        var tag = $(this).parent().data('tag');
+        console.log("tag: ", tag); 
+      });
 
 	
 

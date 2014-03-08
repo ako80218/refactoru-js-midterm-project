@@ -63,7 +63,10 @@
 		<ul class="list-inline">
 			{{#each this}}
 				<li class="list-item">
-					<a class ="btn btn-default tag" href="#" style="font-size:{{this}}">{{@key}}</a>
+					<a class ="btn btn-default tag" href="#" style="font-size:{{this}}" data-tag="{{@key}}">
+						<span class="close glyphicon glyphicon-remove-circle"></span>
+						{{@key}}
+					</a>
 				</li>
 			{{/each}}
 		</ul>
